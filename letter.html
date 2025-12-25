@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gửi Ánh - Merry Christmas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --envelope-color: #d1bfa7;
+            --envelope-dark: #b8a58d;
+            --primary-red: #d63031;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; touch-action: manipulation; }
+
+        body {
+            font-family: 'Quicksand', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('https://images.unsplash.com/photo-1576919228236-a097c32a5cd4?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            overflow: hidden;
+        }
+
+        canvas { position: fixed; top: 0; left: 0; pointer-events: none; z-index: 1; }
+
+        .envelope-wrapper {
+            position: relative;
+            z-index: 10;
+            cursor: pointer;
+            width: 280px;
+            height: 180px;
+            text-align: center;
+            transition: transform 0.8s, opacity 0.8s;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: var(--envelope-color);
+            border-radius: 0 0 5px 5px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.3);
+        }
+
+        .envelope::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            z-index: 5;
+            border-top: 100px solid var(--envelope-dark);
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            transform-origin: top;
+            transition: transform 0.6s;
+        }
+
+        .heart-seal {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 6;
+            color: var(--primary-red);
+            font-size: 2.5rem;
+            text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .letter-box {
+            position: fixed;
+            z-index: 20;
+            max-width: 600px;
+            width: 85%;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            display: none;
+            max-height: 80vh;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 2.5rem;
+            color: var(--primary-red);
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .content {
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #2d3436;
+            text-align: justify;
+            white-space: pre-line;
+        }
+
+        .footer {
+            margin-top: 25px;
+            text-align: right;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.6rem;
+            color: var(--primary-red);
+            opacity: 0;
+            transition: 2s;
+        }
+
+        .visible { opacity: 1; }
+
+        .click-hint {
+            color: white;
+            margin-top: 15px;
+            font-weight: 600;
+            text-shadow: 1px 1px 4px rgba(0,0,0,1);
+            animation: blink 1.5s infinite;
+        }
+
+        @keyframes blink { 50% { opacity: 0.5; } }
+
+        @media (max-width: 480px) {
+            .envelope-wrapper { width: 240px; height: 160px; }
+            .envelope::before { border-top-width: 80px; border-left-width: 120px; border-right-width: 120px; }
+            h1 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="snow"></canvas>
+
+    <div class="envelope-wrapper" id="envelopeWrap">
+        <div class="envelope">
+            <div class="heart-seal">❤</div>
+        </div>
+        <p class="click-hint">Chạm vào tim để mở thư</p>
+    </div>
+
+    <div class="letter-box" id="letter">
+        <h1>Gửi Ánh...</h1>
+        <div class="content" id="typed-content"></div>
+        <div class="footer" id="footer">Giáng sinh an lành và một năm mới rạng rỡ nhé!</div>
+    </div>
+
+    <audio id="bgMusic" loop preload="auto" playsinline>
+        <source src="https://files.catbox.moe/jyfkui.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const text = `Chào Ánh nha, cũng gần hết năm 2025 rồi ha, anh có ngồi lại và nhớ về những chuyện cũ giữa hai chúng ta. Lâu rồi chúng ta không trò chuyện, không còn chia sẻ cho nhau những điều vụn vặt trong cuộc sống nữa, và anh nghĩ đây là thời điểm thích hợp nhất để nói ra những điều vẫn còn nằm lại trong lòng, như một cách để khép lại năm cũ thật nhẹ nhàng.
+
+Trước hết, anh muốn nói lời cảm ơn. Cảm ơn em vì một năm vừa qua, dù chúng ta không còn đồng hành ở khoảng thời gian cuối còn lại của năm, nhưng sự xuất hiện của em đã giúp cho anh nhận ra rất nhiều điều. Cảm ơn em vì những niềm vui, có những buổi gặp nhau, và cả những khoảnh khắc đẹp đẽ mà anh tin rằng dù thời gian có trôi đi, chúng vẫn sẽ luôn có một góc nhỏ trang trọng trong tim mình. Sự xuất hiện của em đã giúp anh nhận ra rất nhiều điều về bản thân và về cách nghiêm túc cũng như là trân trọng một người.
+
+Và điều quan trọng nhất, anh muốn gửi đến em một lời xin lỗi chân thành. Nhìn lại khoảng thời gian đó, anh thấy bản thân mình đã có những lúc trẻ con, ích kỷ và thiếu sót. Xin lỗi vì những lời nói vô tình làm em tổn thương, xin lỗi vì những lần anh không đủ kiên nhẫn để lắng nghe hay thấu hiểu những tâm tư của em. Anh hiểu rằng những sai sót của mình đã để lại những vết thương, và anh thật lòng mong em có thể nhẹ lòng bỏ qua cho những gì đã cũ. Anh xin lỗi em nhiều.
+
+Giáng sinh này, chúc cho em vẫn luôn vui vẻ và hạnh phúc. Chúc em Giáng sinh thật ấm áp bên gia đình và những người em yêu quý. Chúc cho trái tim em sẽ tìm thấy sự bình yên, không còn những vết xước, và luôn rực rỡ như những ánh đèn đêm Noel.
+
+Thế giới này rộng lớn lắm! Mong em sẽ luôn mạnh mẽ, hạnh phúc và thành công trên con đường mình đã chọn nha.`;
+
+        const envelopeWrap = document.getElementById('envelopeWrap');
+        const letterBox = document.getElementById('letter');
+        const audio = document.getElementById("bgMusic");
+        let index = 0;
+        const speed = 30; 
+		
+        function openLetter() {
+            audio.volume = 0.3; 
+            audio.play().catch(e => console.log("Yêu cầu chạm để phát nhạc"));
+
+            envelopeWrap.style.transform = "scale(0.5) translateY(-200px)";
+            envelopeWrap.style.opacity = "0";
+
+            setTimeout(() => {
+                envelopeWrap.style.display = 'none';
+                letterBox.style.display = 'block';
+                typeWriter();
+            }, 800);
+        }
+
+        envelopeWrap.addEventListener('click', openLetter);
+        envelopeWrap.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            openLetter();
+        }, {passive: false});
+
+        function typeWriter() {
+            if (index < text.length) {
+                let char = text.charAt(index);
+                document.getElementById("typed-content").innerHTML += char === "\n" ? "<br>" : char;
+                index++;
+                // Cuộn mượt mà theo chữ
+                letterBox.scrollTo({
+                    top: letterBox.scrollHeight,
+                    behavior: 'smooth'
+                });
+                setTimeout(typeWriter, speed);
+            } else {
+                document.getElementById("footer").classList.add("visible");
+            }
+        }
+
+        const canvas = document.getElementById('snow');
+        const ctx = canvas.getContext('2d');
+        let w, h, flakes = [];
+
+        function init() {
+            w = window.innerWidth; h = window.innerHeight;
+            canvas.width = w; canvas.height = h;
+            flakes = [];
+            for (let i = 0; i < 100; i++) {
+                flakes.push({ x: Math.random() * w, y: Math.random() * h, r: Math.random() * 3 + 1, d: Math.random() * 0.5 + 0.5, s: Math.random() * 0.02 });
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, w, h);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.beginPath();
+            for (let f of flakes) {
+                ctx.moveTo(f.x, f.y);
+                ctx.arc(f.x, f.y, f.r, 0, Math.PI * 2);
+            }
+            ctx.fill();
+            for (let f of flakes) {
+                f.y += f.d; f.x += Math.sin(f.y * f.s);
+                if (f.y > h) { f.y = -10; f.x = Math.random() * w; }
+            }
+            requestAnimationFrame(draw);
+        }
+
+        window.addEventListener('resize', init);
+        init(); draw();
+    </script>
+</body>
+</html>
